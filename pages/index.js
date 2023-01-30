@@ -26,6 +26,27 @@ function ProfileSidebar(propriedades) {
   )
 }
 
+
+<AlurakutRelationsBox>
+  <ProfileRelationsBoxWrapper>
+            <h2 className="smallTitle">
+            {propriedades.title} ({propriedades.items.length})
+            </h2>
+           <ul> 
+              {seguidores.map((itemAtual) => {
+                return (
+                  <li key={itemAtual}>
+                    <a href={`${itemAtual.title}`}>
+                      <img src={`https://github.com/${itemAtual}.png`} />
+                      <span>{itemAtual}</span>
+                    </a>
+                 </li>
+                )
+              })}
+           </ul>
+  </ProfileRelationsBoxWrapper>
+</AlurakutRelationsBox>
+
 export default function Home() {
   const [comunidades, setComunidades] = React.useState([{
     id: '1652352890341321243',
@@ -41,6 +62,19 @@ export default function Home() {
     'marcobrunodev',
     'felipefialho'
   ]
+
+
+  // 0 - criar um array para os dados do git
+  const seguidores = fetch('https://api.github.com/users/peas/followers')
+  .then (function (respostaDoServidor) {
+    return respostaDoServidor.json();
+  })
+
+  .then (function(respostaCompleta) {
+    console.log(respostaCompleta)
+  })
+  
+  // 1 - criar um box q vai ter um map, baseado nos items do git
 
   return (
    <> 
@@ -64,8 +98,8 @@ export default function Home() {
             <form onSubmit={function handleCriaComunidade(e) {
               e.preventDefault();
               const dadosDoForm = new FormData(e.target);
-              console.log('campo : ', dadosDoForm.get('title'))
-              console.log('campo : ', dadosDoForm.get('image'))
+              //console.log('campo : ', dadosDoForm.get('title'))
+              //console.log('campo : ', dadosDoForm.get('image'))
 
 
               const comunidade = {
@@ -103,10 +137,11 @@ export default function Home() {
         </div>
 
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
+          <AlurakutRelationsBox title="Seguidores" items={seguidores} /> 
           <ProfileRelationsBoxWrapper>
           <h2 className="smallTitle">
             Comunidades ({comunidades.length})
-            </h2>
+          </h2>
           <ul> 
               {comunidades.map((itemAtual) => {
                 return (
